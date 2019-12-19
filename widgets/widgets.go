@@ -79,11 +79,10 @@ func BaseWidget(style, inputType string) *Widget {
 	default:
 		urls = append(urls, filepath.Join(templatesPrefix, "input.html"))
 	}
-	styledUrls := make([]string, len(urls))
 	// resolve paths
 	for i := range urls {
 		urls[i] = formcommon.CreateUrl(filepath.Join(templatesPrefix, urls[i]))
 	}
-	templ := template.Must(template.ParseFiles(styledUrls...))
+	templ := template.Must(template.ParseFiles(urls...))
 	return &Widget{templ}
 }
