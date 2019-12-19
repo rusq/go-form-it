@@ -75,9 +75,9 @@ func BaseWidget(style, inputType string) *Widget {
 		formcommon.HIDDEN,
 		formcommon.IMAGE,
 		formcommon.MONTH:
-		urls = append(urls, filepath.Join(templatesPrefix, "input.html"))
+		urls = append(urls, filepath.Join("input.html"))
 	default:
-		urls = append(urls, filepath.Join(templatesPrefix, "input.html"))
+		urls = append(urls, filepath.Join("input.html"))
 	}
 	// resolve paths
 	for i := range urls {
