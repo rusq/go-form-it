@@ -32,11 +32,13 @@ func (w *Widget) Render(data interface{}) string {
 // BaseWidget creates a Widget based on style and inputType parameters, both defined in the common package.
 func BaseWidget(style, inputType string) *Widget {
 	var templatesPrefix = filepath.Join("templates", style)
-	var urls []string = []string{filepath.Join(templatesPrefix, "generic.tmpl")}
+	var urls []string = []string{"generic.tmpl"}
 
 	switch inputType {
-	case formcommon.BUTTON:
-		urls = append(urls, filepath.Join("button.html"))
+	case formcommon.BUTTON,
+		formcommon.RESET,
+		formcommon.SUBMIT:
+		urls = append(urls, "button.html")
 	case formcommon.CHECKBOX:
 		urls = append(urls, filepath.Join("options", "checkbox.html"))
 	case formcommon.TEXTAREA:
@@ -53,10 +55,6 @@ func BaseWidget(style, inputType string) *Widget {
 		urls = append(urls, filepath.Join("number", "range.html"))
 	case formcommon.NUMBER:
 		urls = append(urls, filepath.Join("number", "number.html"))
-	case formcommon.RESET:
-		urls = append(urls, filepath.Join("button.html"))
-	case formcommon.SUBMIT:
-		urls = append(urls, filepath.Join("button.html"))
 	case formcommon.DATE:
 		urls = append(urls, filepath.Join("datetime", "date.html"))
 	case formcommon.DATETIME:
