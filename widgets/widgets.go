@@ -5,9 +5,10 @@ package widgets
 
 import (
 	"bytes"
-	"fmt"
-	"github.com/kirves/go-form-it/common"
 	"html/template"
+	"path/filepath"
+
+	formcommon "github.com/kirves/go-form-it/common"
 )
 
 // Simple widget object that gets executed at render time.
@@ -28,42 +29,44 @@ func (w *Widget) Render(data interface{}) string {
 	return buf.String()
 }
 
-// BaseWidget creates a Widget based on style and inpuType parameters, both defined in the common package.
+// BaseWidget creates a Widget based on style and inputType parameters, both defined in the common package.
 func BaseWidget(style, inputType string) *Widget {
-	var urls []string = []string{formcommon.CreateUrl("templates/%s/generic.tmpl")}
+	var templatesPrefix = filepath.Join("templates", style)
+	var urls []string = []string{filepath.Join(templatesPrefix, "generic.tmpl")}
+
 	switch inputType {
 	case formcommon.BUTTON:
-		urls = append(urls, formcommon.CreateUrl("templates/%s/button.html"))
+		urls = append(urls, filepath.Join("button.html"))
 	case formcommon.CHECKBOX:
-		urls = append(urls, formcommon.CreateUrl("templates/%s/options/checkbox.html"))
+		urls = append(urls, filepath.Join("options", "checkbox.html"))
 	case formcommon.TEXTAREA:
-		urls = append(urls, formcommon.CreateUrl("templates/%s/text/textareainput.html"))
+		urls = append(urls, filepath.Join("text", "textareainput.html"))
 	case formcommon.SELECT:
-		urls = append(urls, formcommon.CreateUrl("templates/%s/options/select.html"))
+		urls = append(urls, filepath.Join("options", "select.html"))
 	case formcommon.PASSWORD:
-		urls = append(urls, formcommon.CreateUrl("templates/%s/text/passwordinput.html"))
+		urls = append(urls, filepath.Join("text", "passwordinput.html"))
 	case formcommon.RADIO:
-		urls = append(urls, formcommon.CreateUrl("templates/%s/options/radiobutton.html"))
+		urls = append(urls, filepath.Join("options", "radiobutton.html"))
 	case formcommon.TEXT:
-		urls = append(urls, formcommon.CreateUrl("templates/%s/text/textinput.html"))
+		urls = append(urls, filepath.Join("text", "textinput.html"))
 	case formcommon.RANGE:
-		urls = append(urls, formcommon.CreateUrl("templates/%s/number/range.html"))
+		urls = append(urls, filepath.Join("number", "range.html"))
 	case formcommon.NUMBER:
-		urls = append(urls, formcommon.CreateUrl("templates/%s/number/number.html"))
+		urls = append(urls, filepath.Join("number", "number.html"))
 	case formcommon.RESET:
-		urls = append(urls, formcommon.CreateUrl("templates/%s/button.html"))
+		urls = append(urls, filepath.Join("button.html"))
 	case formcommon.SUBMIT:
-		urls = append(urls, formcommon.CreateUrl("templates/%s/button.html"))
+		urls = append(urls, filepath.Join("button.html"))
 	case formcommon.DATE:
-		urls = append(urls, formcommon.CreateUrl("templates/%s/datetime/date.html"))
+		urls = append(urls, filepath.Join("datetime", "date.html"))
 	case formcommon.DATETIME:
-		urls = append(urls, formcommon.CreateUrl("templates/%s/datetime/datetime.html"))
+		urls = append(urls, filepath.Join("datetime", "datetime.html"))
 	case formcommon.TIME:
-		urls = append(urls, formcommon.CreateUrl("templates/%s/datetime/time.html"))
+		urls = append(urls, filepath.Join("datetime", "time.html"))
 	case formcommon.DATETIME_LOCAL:
-		urls = append(urls, formcommon.CreateUrl("templates/%s/datetime/datetime.html"))
+		urls = append(urls, filepath.Join("datetime", "datetime.html"))
 	case formcommon.STATIC:
-		urls = append(urls, formcommon.CreateUrl("templates/%s/static.html"))
+		urls = append(urls, filepath.Join("static.html"))
 	case formcommon.SEARCH,
 		formcommon.TEL,
 		formcommon.URL,
@@ -74,13 +77,14 @@ func BaseWidget(style, inputType string) *Widget {
 		formcommon.HIDDEN,
 		formcommon.IMAGE,
 		formcommon.MONTH:
-		urls = append(urls, formcommon.CreateUrl("templates/%s/input.html"))
+		urls = append(urls, filepath.Join(templatesPrefix, "input.html"))
 	default:
-		urls = append(urls, formcommon.CreateUrl("templates/%s/input.html"))
+		urls = append(urls, filepath.Join(templatesPrefix, "input.html"))
 	}
 	styledUrls := make([]string, len(urls))
+	// resolve paths
 	for i := range urls {
-		styledUrls[i] = fmt.Sprintf(urls[i], style)
+		urls[i] = formcommon.CreateUrl(filepath.Join(templatesPrefix, urls[i]))
 	}
 	templ := template.Must(template.ParseFiles(styledUrls...))
 	return &Widget{templ}
